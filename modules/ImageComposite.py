@@ -88,9 +88,13 @@ class ImageCompositeAbsolute:
             container_a = torch.zeros((container_y, container_x, 4))
             container_b = torch.zeros((container_y, container_x, 4))
 
+            # Adjust positions for centering image_a
+            img_a_center_x = images_a_x - img_a_width // 2
+            img_a_center_y = images_a_y - img_a_height // 2
+
             img_a_height_c, img_a_width_c = [
-                clip((images_a_y + img_a_height) - container_y),
-                clip((images_a_x + img_a_width) - container_x)
+                clip((img_a_center_y + img_a_height) - container_y),
+                clip((img_a_center_x + img_a_width) - container_x)
             ]
 
             img_b_height_c, img_b_width_c = [
@@ -100,8 +104,8 @@ class ImageCompositeAbsolute:
 
             if img_a_height_c <= img_a_height and img_a_width_c <= img_a_width:
                 container_a[
-                    images_a_y:img_a_height + images_a_y - img_a_height_c,
-                    images_a_x:img_a_width + images_a_x - img_a_width_c
+                    img_a_center_y:img_a_height + img_a_center_y - img_a_height_c,
+                    img_a_center_x:img_a_width + img_a_center_x - img_a_width_c
                 ] = image_a[
                     :img_a_height - img_a_height_c,
                     :img_a_width - img_a_width_c
